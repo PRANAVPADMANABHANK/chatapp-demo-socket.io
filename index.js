@@ -11,8 +11,9 @@ app.use(express.static(path.resolve("./public")))
 
 //socket.io
 io.on('connection', (socket) => {
-    console.log("A new user has connected", socket.id)
-    
+    socket.on('user-message',message=>{
+        io.emit("message", message)
+    })    
 })
 
 app.get('/', (req,res)=>{

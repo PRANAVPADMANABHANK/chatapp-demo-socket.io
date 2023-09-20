@@ -1,20 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat App</title>
-</head>
-<body>
-    <h1>Chatting with me</h1>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #e5ddd5;
+        margin: 0;
+        padding: 0;
+      }
 
-    <input type="text" id="message" placeholder="Enter Message">
-    <button id="sendButton">Send</button>
+      h1 {
+        color: #075e54;
+        font-size: 24px;
+        margin: 20px 0;
+      }
+
+      #message {
+        width: 70%;
+        padding: 10px;
+        border: none;
+        border-bottom: 2px solid #075e54;
+        margin-right: 10px;
+        font-size: 16px;
+      }
+
+      #sendButton {
+        background-color: #075e54;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      #sendButton:hover {
+        background-color: #128c7e;
+      }
+
+      #messages {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+        overflow-y: auto;
+        max-height: 300px;
+      }
+
+      p {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #dcf8c6;
+        border-radius: 10px;
+        font-size: 16px;
+      }
+
+      #messageContainer {
+        margin-top: 20px; /* Add margin-top for separation */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Chit Chat</h1>
+
+    <div id="messages"></div>
+
+    <div id="messageContainer">
+      <input type="text" id="message" placeholder="Type a message" />
+      <button id="sendButton">Send</button>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
-        const sendBtn = 
+      const socket = io();
+      const sendBtn = document.getElementById("sendButton");
+      const messageInput = document.getElementById("message");
+      const allMessages = document.getElementById("messages");
+
+      socket.on("message", (message) => {
+        const p = document.createElement("p");
+        p.innerText = message;
+        allMessages.appendChild(p);
+      });
+
+      sendBtn.addEventListener("click", (e) => {
+        const message = messageInput.value;
+        if (message) {
+          socket.emit("user-message", message);
+          messageInput.value = "";
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
